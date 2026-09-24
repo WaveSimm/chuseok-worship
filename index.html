@@ -275,31 +275,19 @@ const creed = (list = CREED) => list.map(l => `<p class="lp">${l}</p>`).join('')
 /* 순서 (폰용 한 화면 + 패드용 여러 화면) */
 const STEPS = [
   { t:'사도신경', w:'다 같이', body: creed(),
-    pad: [
-      { h:'사도신경', w:'다 같이', b: creed(CREED.slice(0,8)) },
-      { h:'사도신경', w:'다 같이', b: creed(CREED.slice(8)) },
-    ]},
+    pad: [{ h:'사도신경', w:'다 같이', b: creed() }]},
   { t:'찬송 587장 감사하는 성도여', w:'다 같이', body: hymn(HYMNS[587]),
     pad: [{ h:'찬송', w:'다 같이', b: hymn(HYMNS[587]) }] },
   { t:'시편 100편 교독', w:'다 같이 · 홀수 절은 어른 세대, 짝수 절은 자녀 세대',
     body: verses(PS100, altSide),
-    pad: [
-      { h:'시편 100편 교독', w:'홀수 절 어른 세대 · 짝수 절 자녀 세대', b: verses(PS100.slice(0,3), altSide) },
-      { h:'시편 100편 교독', w:'홀수 절 어른 세대 · 짝수 절 자녀 세대', b: verses(PS100.slice(3), altSide) },
-    ]},
+    pad: [{ h:'시편 100편 교독', w:'홀수 절 어른 세대 · 짝수 절 자녀 세대', b: verses(PS100, altSide) }]},
   { t:'기도', w:'제수씨 송희원', body:'<p class="big">제수씨 송희원</p>',
     pad: [{ h:'기도', w:'', b:'<p class="big">제수씨 송희원</p>' }] },
   { t:'성경 봉독 디모데후서 1장 3~7절', w:'다 같이',
     body: verses(TIM),
-    pad: [
-      { h:'디모데후서 1장', w:'다 같이', b: verses(TIM.slice(0,3)) },
-      { h:'디모데후서 1장', w:'다 같이', b: verses(TIM.slice(3)) },
-    ]},
+    pad: [{ h:'디모데후서 1장 3~7절', w:'다 같이', b: verses(TIM) }]},
   { t:'말씀 나눔', w:'심윤송 · 5분', body: lineage() + points(),
-    pad: [
-      { h:'대를 이어 흐르는 믿음', w:'', b: lineage() },
-      { h:'말씀 나눔', w:'심윤송', b: points() },
-    ]},
+    pad: [{ h:'대를 이어 흐르는 믿음', w:'심윤송', b: lineage() + points() }]},
   { t:'기도', w:'사회자', body:'<p class="big">심윤송</p>',
     pad: [{ h:'기도', w:'', b:'<p class="big">심윤송</p>' }] },
   { t:'찬송 305장 나 같은 죄인 살리신', w:'다 같이', body: hymn(HYMNS[305]),
@@ -347,7 +335,8 @@ function showPad(i){
   show('pad'); applyFont(); themeLabel();
   $('#padBody').innerHTML = (s.w ? `<p class="who">${s.w}</p>` : '') + `<h2>${s.h}</h2>` + s.b;
   $('#padBody').scrollTop = 0;
-  $('#padCount').textContent = `${cur+1} / ${SCREENS.length}`;
+  /* 타이틀(0번) 다음부터는 장면 번호가 곧 순서 번호 */
+  $('#padCount').textContent = cur === 0 ? '시작' : `순서 ${cur} / ${SCREENS.length-1}`;
   $('#prevBtn').disabled = cur === 0;
   $('#nextBtn').disabled = cur === SCREENS.length-1;
   $('#nextBtn').textContent = cur === SCREENS.length-1 ? '끝' : '다음';
