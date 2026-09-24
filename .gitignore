@@ -1,0 +1,9 @@
+# 평문 비밀번호 — 절대 커밋하지 않는다
+.env
+
+# 잡다한 것
+.bkit/
+_check.js
+*.log
+.DS_Store
+Thumbs.db
