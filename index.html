@@ -77,10 +77,12 @@ a.bigbtn.alt{background:var(--btn2);color:var(--btn2-fg);border:2px solid var(--
   padding:.55em .6em;border-radius:.4em;border:0;background:var(--moon);color:var(--moon-fg)}
 #gateErr{min-height:1.2em;font-size:.7em;color:#ff9b9b}
 .lin{margin:0 0 .7em}
-.lin-row{margin:0 0 .5em;line-height:1.5}
-.lin-k{display:block;font-size:.58em;color:var(--muted);letter-spacing:.02em;margin:0 0 .1em}
-.lin-n{font-weight:700}
-.lin-a{color:var(--muted);margin:0 .28em;font-weight:400}
+.lin-row{display:flex;align-items:baseline;gap:.4em;margin:0 0 .45em;line-height:1.4;
+  padding:0 0 .35em;border-bottom:1px solid var(--line)}
+.lin-row:last-child{border-bottom:0}
+.lin-g{flex:0 0 auto;font-size:.55em;color:var(--muted);letter-spacing:.02em}
+.lin-n{flex:1 1 auto;font-weight:700}
+.lin-b{flex:0 0 auto;font-size:.55em;color:var(--muted);white-space:nowrap}
 .lyric{white-space:pre-line}
 .big{font-size:1.15em;font-weight:700;line-height:1.35;margin:0 0 .5em}
 .sub{font-size:.7em;color:var(--muted);margin:0 0 .4em}
@@ -191,9 +193,12 @@ const HYMNS = {
          video:'https://www.youtube.com/watch?v=_F8hQnWwHns' },
 };
 
+/* [세대, 우리 집, 디모데후서 1장 5절의 대응] */
 const LINEAGE = [
-  ['디모데후서 1장 5절', ['로이스', '유니게', '디모데']],
-  ['우리 집',           ['현옥순 할머니', '한문순 어머니', '우리', '손주 여섯']],
+  ['1대', '현옥순 할머니', '로이스'],
+  ['2대', '한문순 어머니', '유니게'],
+  ['3대', '심윤송 · 심윤민 · 심윤수', '디모데'],
+  ['4대', '현규 · 예솔 · 은솔 · 규빈 · 규환 · 규영', ''],
 ];
 
 const POINTS = [
@@ -234,7 +239,7 @@ const LORDS_PRAYER = [
 
 const ROLES = [
   ['사회','심윤송'],
-  ['기도','제수씨 송희'],
+  ['기도','송희원'],
   ['성경 봉독','다 같이'],
   ['말씀 나눔','심윤송'],
   ['어머니 기도','어머니'],
@@ -259,9 +264,10 @@ function hymn(h){
     <a class="bigbtn alt" target="_blank" rel="noopener" href="${h.video}">반주 영상 (유튜브)</a>`;
 }
 const points = () => POINTS.map(([k,t]) => `<div class="verse"><span class="vn">${k}</span><span>${t}</span></div>`).join('');
-const lineage = () => `<div class="lin">` + LINEAGE.map(([label, names]) =>
-  `<div class="lin-row"><span class="lin-k">${label}</span>` +
-  names.map(n => `<span class="lin-n">${n}</span>`).join('<span class="lin-a">→</span>') +
+const lineage = () => `<div class="lin">` + LINEAGE.map(([gen, ours, bible]) =>
+  `<div class="lin-row"><span class="lin-g">${gen}</span>` +
+  `<span class="lin-n">${ours}</span>` +
+  (bible ? `<span class="lin-b">${bible}</span>` : '') +
   `</div>`).join('') + `</div>`;
 const prayer = () => LORDS_PRAYER.map(l => `<p class="lp">${l}</p>`).join('');
 const creed = (list = CREED) => list.map(l => `<p class="lp">${l}</p>`).join('');
@@ -281,8 +287,8 @@ const STEPS = [
       { h:'시편 100편 교독', w:'홀수 절 어른 세대 · 짝수 절 자녀 세대', b: verses(PS100.slice(0,3), altSide) },
       { h:'시편 100편 교독', w:'홀수 절 어른 세대 · 짝수 절 자녀 세대', b: verses(PS100.slice(3), altSide) },
     ]},
-  { t:'기도', w:'제수씨 송희', body:'<p class="big">제수씨 송희</p>',
-    pad: [{ h:'기도', w:'', b:'<p class="big">제수씨 송희</p>' }] },
+  { t:'기도', w:'송희원', body:'<p class="big">송희원</p>',
+    pad: [{ h:'기도', w:'', b:'<p class="big">송희원</p>' }] },
   { t:'성경 봉독 디모데후서 1장 3~7절', w:'다 같이',
     body: verses(TIM),
     pad: [
