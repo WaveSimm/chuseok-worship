@@ -3,10 +3,17 @@
 
 # 설교문 — 개인용. 공개 저장소에 올리지 않는다
 설교문.md
+설교문.docx
+설교문.pdf
+make_docx.py
+_확인.pdf
 
 # 악보 원본(파워포인트) — 웹에서 못 쓰고 용량만 큼. 손에는 남겨 둠
 sheets/*.ppt
 sheets/*.pptx
+
+# 편집기 개인 설정
+.vscode/
 
 # 잡다한 것
 .bkit/
