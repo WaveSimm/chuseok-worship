@@ -76,6 +76,11 @@ a.bigbtn.alt{background:var(--btn2);color:var(--btn2-fg);border:2px solid var(--
 #gate button{width:min(88vw,420px);font-size:1.05em;font-family:inherit;font-weight:700;
   padding:.55em .6em;border-radius:.4em;border:0;background:var(--moon);color:var(--moon-fg)}
 #gateErr{min-height:1.2em;font-size:.7em;color:#ff9b9b}
+.lin{margin:0 0 .7em}
+.lin-row{margin:0 0 .5em;line-height:1.5}
+.lin-k{display:block;font-size:.58em;color:var(--muted);letter-spacing:.02em;margin:0 0 .1em}
+.lin-n{font-weight:700}
+.lin-a{color:var(--muted);margin:0 .28em;font-weight:400}
 .lyric{white-space:pre-line}
 .big{font-size:1.15em;font-weight:700;line-height:1.35;margin:0 0 .5em}
 .sub{font-size:.7em;color:var(--muted);margin:0 0 .4em}
@@ -186,8 +191,13 @@ const HYMNS = {
          video:'https://www.youtube.com/watch?v=_F8hQnWwHns' },
 };
 
+const LINEAGE = [
+  ['디모데후서 1장 5절', ['로이스', '유니게', '디모데']],
+  ['우리 집',           ['현옥순 할머니', '한문순 어머니', '우리', '손주 다섯']],
+];
+
 const POINTS = [
-  ['5절','믿음은 내가 만든 것이 아니라 물려받은 것입니다. 디모데의 믿음은 외할머니 로이스와 어머니 유니게에게서 왔습니다. 우리 가족 믿음의 출발점은 어머니의 기도입니다.'],
+  ['5절','믿음은 내가 만든 것이 아니라 물려받은 것입니다. 디모데의 믿음은 외할머니 로이스와 어머니 유니게에게서 왔습니다. 우리 가족의 믿음도 현옥순 할머니에게서 한문순 어머니께로, 그리고 우리에게로 이어졌습니다.'],
   ['6절','물려받은 것은 다시 불일듯 하게 할 책임이 있습니다. 부모 세대의 몫입니다.'],
   ['7절','하나님이 주신 것은 두려움이 아니라 능력과 사랑과 근신하는 마음입니다. 진로와 취업 앞에 선 다섯 명에게 주시는 말씀입니다.'],
 ];
@@ -250,6 +260,10 @@ function hymn(h){
     <a class="bigbtn alt" target="_blank" rel="noopener" href="${h.video}">반주 영상 (유튜브)</a>`;
 }
 const points = () => POINTS.map(([k,t]) => `<div class="verse"><span class="vn">${k}</span><span>${t}</span></div>`).join('');
+const lineage = () => `<div class="lin">` + LINEAGE.map(([label, names]) =>
+  `<div class="lin-row"><span class="lin-k">${label}</span>` +
+  names.map(n => `<span class="lin-n">${n}</span>`).join('<span class="lin-a">→</span>') +
+  `</div>`).join('') + `</div>`;
 const prayer = () => LORDS_PRAYER.map(l => `<p class="lp">${l}</p>`).join('');
 const creed = (list = CREED) => list.map(l => `<p class="lp">${l}</p>`).join('');
 
@@ -276,8 +290,11 @@ const STEPS = [
       { h:'디모데후서 1장', w:'손주 다섯이 한 절씩', b: verses(TIM.slice(0,3), readSide) },
       { h:'디모데후서 1장', w:'손주 다섯이 한 절씩', b: verses(TIM.slice(3), readSide) },
     ]},
-  { t:'말씀 나눔', w:'심윤송 · 5분', body: points(),
-    pad: [{ h:'말씀 나눔', w:'심윤송', b: points() }] },
+  { t:'말씀 나눔', w:'심윤송 · 5분', body: lineage() + points(),
+    pad: [
+      { h:'대를 이어 흐르는 믿음', w:'', b: lineage() },
+      { h:'말씀 나눔', w:'심윤송', b: points() },
+    ]},
   { t:'기도', w:'사회자', body:'<p class="big">심윤송</p>',
     pad: [{ h:'기도', w:'', b:'<p class="big">심윤송</p>' }] },
   { t:'찬송 305장 나 같은 죄인 살리신', w:'다 같이', body: hymn(HYMNS[305]),
