@@ -121,7 +121,7 @@ a.bigbtn.alt{background:var(--btn2);color:var(--btn2-fg);border:2px solid var(--
   <p class="theme" id="homeTheme"></p>
   <a class="enter mom" href="#pad">어머니용<small>패드 · 큰 글씨</small></a>
   <a class="enter fam" href="#phone">가족용 (폰)</a>
-  <p class="note">약 35~40분</p>
+  <p class="note">약 25~30분</p>
 </div>
 
 <div id="pad" class="pad hidden">
@@ -192,6 +192,22 @@ const POINTS = [
   ['7절','하나님이 주신 것은 두려움이 아니라 능력과 사랑과 근신하는 마음입니다. 진로와 취업 앞에 선 다섯 명에게 주시는 말씀입니다.'],
 ];
 
+const CREED = [
+  '전능하사 천지를 만드신 하나님 아버지를 내가 믿사오며',
+  '그 외아들 우리 주 예수 그리스도를 믿사오니',
+  '이는 성령으로 잉태하사 동정녀 마리아에게 나시고',
+  '본디오 빌라도에게 고난을 받으사',
+  '십자가에 못 박혀 죽으시고',
+  '장사한 지 사흘 만에 죽은 자 가운데서 다시 살아나시며',
+  '하늘에 오르사 전능하신 하나님 우편에 앉아 계시다가',
+  '저리로서 산 자와 죽은 자를 심판하러 오시리라',
+  '성령을 믿사오며',
+  '거룩한 공회와 성도가 서로 교통하는 것과',
+  '죄를 사하여 주시는 것과',
+  '몸이 다시 사는 것과 영원히 사는 것을 믿사옵나이다',
+  '아멘',
+];
+
 const LORDS_PRAYER = [
   '하늘에 계신 우리 아버지여',
   '이름이 거룩히 여김을 받으시오며',
@@ -207,11 +223,11 @@ const LORDS_PRAYER = [
 ];
 
 const ROLES = [
-  ['사회','윤송'],
-  ['시작 기도','동생'],
+  ['사회','심윤송'],
+  ['기도','동생'],
   ['성경 봉독','손주 다섯, 한 절씩'],
-  ['간증','어머니'],
-  ['축복 기도','어머니'],
+  ['말씀 나눔','심윤송'],
+  ['어머니 기도','어머니'],
 ];
 
 /* ===== 그리기 도우미 ===== */
@@ -235,38 +251,40 @@ function hymn(h){
 }
 const points = () => POINTS.map(([k,t]) => `<div class="verse"><span class="vn">${k}</span><span>${t}</span></div>`).join('');
 const prayer = () => LORDS_PRAYER.map(l => `<p class="lp">${l}</p>`).join('');
+const creed = (list = CREED) => list.map(l => `<p class="lp">${l}</p>`).join('');
 
 /* 순서 (폰용 한 화면 + 패드용 여러 화면) */
 const STEPS = [
+  { t:'사도신경', w:'다 같이', body: creed(),
+    pad: [
+      { h:'사도신경', w:'다 같이', b: creed(CREED.slice(0,8)) },
+      { h:'사도신경', w:'다 같이', b: creed(CREED.slice(8)) },
+    ]},
+  { t:'찬송 587장 감사하는 성도여', w:'다 같이', body: hymn(HYMNS[587]),
+    pad: [{ h:'찬송', w:'다 같이', b: hymn(HYMNS[587]) }] },
   { t:'시편 100편 교독', w:'다 같이 · 홀수 절은 어른 세대, 짝수 절은 자녀 세대',
     body: verses(PS100, altSide),
     pad: [
       { h:'시편 100편 교독', w:'홀수 절 어른 세대 · 짝수 절 자녀 세대', b: verses(PS100.slice(0,3), altSide) },
       { h:'시편 100편 교독', w:'홀수 절 어른 세대 · 짝수 절 자녀 세대', b: verses(PS100.slice(3), altSide) },
     ]},
-  { t:'찬송 587장 감사하는 성도여', w:'다 같이', body: hymn(HYMNS[587]),
-    pad: [{ h:'찬송', w:'다 같이', b: hymn(HYMNS[587]) }] },
-  { t:'시작 기도', w:'동생', body:'<p class="big">동생</p>',
-    pad: [{ h:'시작 기도', w:'', b:'<p class="big">동생</p>' }] },
+  { t:'기도', w:'동생', body:'<p class="big">동생</p>',
+    pad: [{ h:'기도', w:'', b:'<p class="big">동생</p>' }] },
   { t:'성경 봉독 디모데후서 1장 3~7절', w:'손주 다섯이 한 절씩',
     body: verses(TIM, readSide),
     pad: [
       { h:'디모데후서 1장', w:'손주 다섯이 한 절씩', b: verses(TIM.slice(0,3), readSide) },
       { h:'디모데후서 1장', w:'손주 다섯이 한 절씩', b: verses(TIM.slice(3), readSide) },
     ]},
-  { t:'말씀 나눔', w:'사회자 · 5분', body: points(),
-    pad: [{ h:'말씀 나눔', w:'사회자', b: points() }] },
-  { t:'어머니 간증', w:'어머니 · 5~10분',
-    body:'<p class="big">처음 예수님을 믿게 되신 이야기</p><p class="big">우리 가족을 위해 기도해 오신 이야기</p>',
-    pad: [{ h:'어머니 말씀 시간', w:'', b:'<p class="big">처음 예수님을 믿게 되신 이야기</p><p class="big">우리 가족을 위해 기도해 오신 이야기</p>' }] },
-  { t:'감사 나눔', w:'한 사람씩 · 30초',
-    body:'<p class="big">올해 감사한 것 한 가지</p><p class="sub">어머니부터 시작해서 부모 세대, 손주들 순서로</p>',
-    pad: [{ h:'감사 나눔', w:'한 사람씩', b:'<p class="big">올해 감사한 것 한 가지</p><p class="sub">어머니부터 시작해서 부모 세대, 손주들 순서로</p>' }] },
+  { t:'말씀 나눔', w:'심윤송 · 5분', body: points(),
+    pad: [{ h:'말씀 나눔', w:'심윤송', b: points() }] },
+  { t:'기도', w:'사회자', body:'<p class="big">심윤송</p>',
+    pad: [{ h:'기도', w:'', b:'<p class="big">심윤송</p>' }] },
   { t:'찬송 305장 나 같은 죄인 살리신', w:'다 같이', body: hymn(HYMNS[305]),
     pad: [{ h:'찬송', w:'다 같이', b: hymn(HYMNS[305]) }] },
-  { t:'축복 기도', w:'어머니',
+  { t:'어머니 기도', w:'어머니',
     body:'<p class="big">어머니께서 자녀와 손주들을 위해 기도해 주십니다</p><p class="sub">힘드시면 동생 부부가 대신합니다</p>',
-    pad: [{ h:'축복 기도', w:'', b:'<p class="big">자녀와 손주들을 위해 어머니께서 기도해 주세요</p>' }] },
+    pad: [{ h:'어머니 기도', w:'', b:'<p class="big">자녀와 손주들을 위해 어머니께서 기도해 주세요</p>' }] },
   { t:'주기도문', w:'다 같이', body: prayer(),
     pad: [{ h:'주기도문', w:'다 같이', b: prayer() }] },
 ];
@@ -324,7 +342,7 @@ function showPhone(){
     <header><div class="k">2026 추석</div><h1>가정예배</h1><p class="theme">${THEME}</p></header>
     <div class="roles">${roles}</div>
     ${steps}
-    <p class="foot">본문 디모데후서 1장 3~7절 · 약 35~40분</p>`;
+    <p class="foot">본문 디모데후서 1장 3~7절 · 약 25~30분</p>`;
   window.scrollTo(0,0);
 }
 
