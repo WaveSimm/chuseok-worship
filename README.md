@@ -9,6 +9,9 @@
 | `.env` | 실제 비밀번호. **git에 올라가지 않는다** |
 | `.env.example` | `.env` 샘플. 이걸 복사해서 쓴다 |
 | `build.py` | `.env`의 비밀번호 → SHA-256 해시를 `index.html`에 주입 |
+| `setpw.py` | 비밀번호 바꾸기. `.env`를 직접 열 필요 없다 |
+| `비밀번호 바꾸기.bat` | 더블클릭하면 `setpw.py` 실행 |
+| `env 파일 열기.bat` | 더블클릭하면 `.env`를 메모장으로 연다 |
 | `.gitignore` | `.env`와 잡파일 제외 |
 
 ## 예배 개요
@@ -70,11 +73,27 @@
 
 페이지에 들어가려면 비밀번호가 필요하다. 한 번 넣으면 그 기기에서는 다시 묻지 않는다(localStorage).
 
+### 바꾸는 법 (쉬운 쪽)
+
+**`비밀번호 바꾸기.bat` 을 더블클릭**한다. 새 비밀번호를 두 번 넣으면
+`.env` 갱신 → 해시 주입 → (물어본 뒤) GitHub push 까지 알아서 한다.
+
+### 바꾸는 법 (터미널)
+
+```bash
+python setpw.py          # 물어보는 대로 넣으면 끝
+```
+
+직접 하고 싶으면:
+
 ```bash
 cp .env.example .env     # 처음 한 번
 # .env 의 WORSHIP_PASSWORD 를 원하는 값으로 고친다
 python build.py          # 해시를 index.html 에 주입
 ```
+
+> `.env`는 윈도우에서 더블클릭으로 안 열린다(확장자가 `ASP.FileEnv`로 잡혀 있다).
+> `env 파일 열기.bat` 을 쓰거나, 우클릭 → 연결 프로그램 → 메모장으로 연다.
 
 `.env`는 `.gitignore`에 있어 git에 올라가지 않는다. 배포되는 `index.html`에는 평문이 아니라
 SHA-256 해시만 들어간다.
