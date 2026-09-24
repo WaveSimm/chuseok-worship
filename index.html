@@ -46,6 +46,7 @@ a{color:var(--link)}
 .pad-top{display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 8px) 14px 8px;border-bottom:2px solid var(--line)}
 .pad-top .count{flex:1;text-align:center;color:var(--muted);font-weight:500;font-size:22px}
 .tb{min-width:56px;min-height:52px;padding:0 14px;border:2px solid var(--line);border-radius:12px;background:var(--btn2);color:var(--btn2-fg);font-size:20px;font-weight:700}
+.tb:disabled{opacity:.3}
 .pad-body{flex:1;overflow:auto;padding:28px 30px 40px;font-size:var(--pad)}
 .pad-bottom{display:flex;gap:12px;padding:12px 14px calc(env(safe-area-inset-bottom,0px) + 12px);border-top:2px solid var(--line)}
 .pad-bottom button{flex:1;min-height:96px;font-size:34px;font-weight:900;border:0;border-radius:18px;background:var(--btn);color:var(--btn-fg)}
@@ -137,8 +138,8 @@ a.bigbtn.alt{background:var(--btn2);color:var(--btn2-fg);border:2px solid var(--
   <div class="pad-top">
     <button class="tb" onclick="location.hash=''" aria-label="홈으로">홈</button>
     <span class="count" id="padCount"></span>
-    <button class="tb" onclick="fontStep(-1)" aria-label="글자 작게">가−</button>
-    <button class="tb" onclick="fontStep(1)" aria-label="글자 크게">가＋</button>
+    <button class="tb" id="fontDown" onclick="fontStep(-1)" aria-label="글자 작게">가−</button>
+    <button class="tb" id="fontUp" onclick="fontStep(1)" aria-label="글자 크게">가＋</button>
     <button class="tb" id="themeBtn" onclick="toggleTheme()"></button>
   </div>
   <div class="pad-body" id="padBody"></div>
@@ -307,11 +308,16 @@ const SCREENS = [
 ];
 
 /* ===== 설정 저장 (없어도 동작) ===== */
-const SIZES = [34, 40, 48, 58];
+const SIZES = [34, 40, 48, 58, 70, 84];
 function loadPref(k, d){ try { const v = localStorage.getItem(k); return v === null ? d : v; } catch(e){ return d; } }
 function savePref(k, v){ try { localStorage.setItem(k, v); } catch(e){} }
 let fi = Math.min(SIZES.length-1, Math.max(0, parseInt(loadPref('gw-font', 1)) || 1));
-function applyFont(){ document.documentElement.style.setProperty('--pad', SIZES[fi] + 'px'); }
+function applyFont(){
+  document.documentElement.style.setProperty('--pad', SIZES[fi] + 'px');
+  const sm = document.getElementById('fontDown'), bg = document.getElementById('fontUp');
+  if (sm) sm.disabled = fi === 0;
+  if (bg) bg.disabled = fi === SIZES.length - 1;
+}
 function fontStep(d){ fi = Math.min(SIZES.length-1, Math.max(0, fi + d)); savePref('gw-font', fi); applyFont(); }
 const savedTheme = loadPref('gw-theme', '');
 if (savedTheme) document.documentElement.dataset.theme = savedTheme;
