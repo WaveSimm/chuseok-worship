@@ -82,6 +82,8 @@ a.bigbtn.alt{background:var(--btn2);color:var(--btn2-fg);border:2px solid var(--
 .lin-row:last-child{border-bottom:0}
 .lin-g{flex:0 0 auto;font-size:.55em;color:var(--muted);letter-spacing:.02em}
 .lin-n{flex:1 1 auto;font-weight:700}
+.lin-f{display:block}
+.lin-f + .lin-f{margin-top:.18em}
 .lin-b{flex:0 0 auto;font-size:.55em;color:var(--muted);white-space:nowrap}
 .lyric{white-space:pre-line}
 .big{font-size:1.15em;font-weight:700;line-height:1.35;margin:0 0 .5em}
@@ -193,12 +195,12 @@ const HYMNS = {
          video:'https://www.youtube.com/watch?v=_F8hQnWwHns' },
 };
 
-/* [세대, 우리 집, 디모데후서 1장 5절의 대응] */
+/* [세대, 가족 묶음(부부/형제는 한 묶음), 디모데후서 1장 5절의 대응] */
 const LINEAGE = [
-  ['1대', '현옥순 할머니', '로이스'],
-  ['2대', '한문순 어머니', '유니게'],
-  ['3대', '심윤송 · 심윤민 · 심윤수', '디모데'],
-  ['4대', '현규 · 예솔 · 은솔 · 규빈 · 규환 · 규영', ''],
+  ['1대', [['현옥순 할머니']],                                  '로이스'],
+  ['2대', [['한문순 어머니', '심재학 아버지']],                  '유니게'],
+  ['3대', [['심윤송', '정진숙'], ['심윤민'], ['심윤수', '송희원']], '디모데'],
+  ['4대', [['현규', '예솔', '은솔'], ['규빈', '규환', '규영']],    ''],
 ];
 
 const POINTS = [
@@ -264,10 +266,10 @@ function hymn(h){
     <a class="bigbtn alt" target="_blank" rel="noopener" href="${h.video}">반주 영상 (유튜브)</a>`;
 }
 const points = () => POINTS.map(([k,t]) => `<div class="verse"><span class="vn">${k}</span><span>${t}</span></div>`).join('');
-const lineage = () => `<div class="lin">` + LINEAGE.map(([gen, ours, bible]) =>
-  `<div class="lin-row"><span class="lin-g">${gen}</span>` +
-  `<span class="lin-n">${ours}</span>` +
-  (bible ? `<span class="lin-b">${bible}</span>` : '') +
+const lineage = () => `<div class="lin">` + LINEAGE.map(([gen, groups, bible]) =>
+  `<div class="lin-row"><span class="lin-g">${gen}</span><span class="lin-n">` +
+  groups.map(g => `<span class="lin-f">${g.join(' · ')}</span>`).join('') +
+  `</span>` + (bible ? `<span class="lin-b">${bible}</span>` : '') +
   `</div>`).join('') + `</div>`;
 const prayer = () => LORDS_PRAYER.map(l => `<p class="lp">${l}</p>`).join('');
 const creed = (list = CREED) => list.map(l => `<p class="lp">${l}</p>`).join('');
