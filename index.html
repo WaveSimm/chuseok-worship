@@ -13,7 +13,7 @@
   --bg:#ffffff;--fg:#111111;--muted:#5c5c5c;--line:#dcdcdc;
   --link:#1a47b8;--btn:#111111;--btn-fg:#ffffff;--btn2:#f1f1f1;--btn2-fg:#111111;
   --night:#132039;--night-fg:#f4f1e6;--night-muted:#b7bccb;--moon:#f3d67c;--moon-fg:#1b1a12;
-  --pad:40px;
+  --pad:40px;--padw:400;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
@@ -44,14 +44,19 @@ a{color:var(--link)}
 /* 어머니용 (패드) */
 .pad{position:fixed;inset:0;display:flex;flex-direction:column;background:var(--bg)}
 .pad-top{display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 8px) 14px 8px;border-bottom:2px solid var(--line)}
-.pad-top .count{flex:1;text-align:center;color:var(--muted);font-weight:500;font-size:22px}
+.pad-top .count{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-align:center;color:var(--muted);font-weight:500;font-size:22px}
 .tb{min-width:56px;min-height:52px;padding:0 14px;border:2px solid var(--line);border-radius:12px;background:var(--btn2);color:var(--btn2-fg);font-size:20px;font-weight:700}
 .tb:disabled{opacity:.3}
-.pad-body{flex:1;overflow:auto;padding:28px 30px 40px;font-size:var(--pad)}
+.pad-body{flex:1;overflow:auto;padding:28px 30px 40px;font-size:var(--pad);font-weight:var(--padw)}
 .pad-bottom{display:flex;gap:12px;padding:12px 14px calc(env(safe-area-inset-bottom,0px) + 12px);border-top:2px solid var(--line)}
 .pad-bottom button{flex:1;min-height:96px;font-size:34px;font-weight:900;border:0;border-radius:18px;background:var(--btn);color:var(--btn-fg)}
 .pad-bottom button.prev{flex:.6;background:var(--btn2);color:var(--btn2-fg);border:2px solid var(--line)}
 .pad-bottom button:disabled{opacity:.25}
+@media (max-width:520px){
+  .pad-top{gap:6px;padding-left:8px;padding-right:8px}
+  .tb{min-width:44px;padding:0 8px;font-size:17px}
+  .pad-top .count{font-size:16px}
+}
 
 /* 공통 내용 (글자 크기는 부모의 em을 따름) */
 .who{font-size:.55em;color:var(--muted);font-weight:500;margin:0 0 .2em}
@@ -139,6 +144,7 @@ img.sheet{display:block;width:100%;height:auto;margin:.45em 0 .5em;
     <span class="count" id="padCount"></span>
     <button class="tb" id="fontDown" onclick="fontStep(-1)" aria-label="글자 작게">가−</button>
     <button class="tb" id="fontUp" onclick="fontStep(1)" aria-label="글자 크게">가＋</button>
+    <button class="tb" id="boldBtn" onclick="toggleBold()"></button>
     <button class="tb" id="themeBtn" onclick="toggleTheme()"></button>
   </div>
   <div class="pad-body" id="padBody"></div>
@@ -317,6 +323,15 @@ function applyFont(){
   if (bg) bg.disabled = fi === SIZES.length - 1;
 }
 function fontStep(d){ fi = Math.min(SIZES.length-1, Math.max(0, fi + d)); savePref('gw-font', fi); applyFont(); }
+
+/* 굵게 — 어머니께서 획이 얇아 보이실 때 */
+let bold = loadPref('gw-bold', '0') === '1';
+function applyBold(){
+  document.documentElement.style.setProperty('--padw', bold ? '700' : '400');
+  const b = document.getElementById('boldBtn');
+  if (b) b.textContent = bold ? '보통' : '굵게';
+}
+function toggleBold(){ bold = !bold; savePref('gw-bold', bold ? '1' : '0'); applyBold(); }
 const savedTheme = loadPref('gw-theme', '');
 if (savedTheme) document.documentElement.dataset.theme = savedTheme;
 function effDark(){
@@ -338,7 +353,7 @@ function show(id){ ['home','pad','phone'].forEach(v => $('#'+v).classList.toggle
 function showPad(i){
   cur = Math.max(0, Math.min(SCREENS.length-1, i));
   const s = SCREENS[cur];
-  show('pad'); applyFont(); themeLabel();
+  show('pad'); applyFont(); applyBold(); themeLabel();
   $('#padBody').innerHTML = (s.w ? `<p class="who">${s.w}</p>` : '') + `<h2>${s.h}</h2>` + s.b;
   $('#padBody').scrollTop = 0;
   /* 타이틀(0번) 다음부터는 장면 번호가 곧 순서 번호 */
