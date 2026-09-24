@@ -86,6 +86,8 @@ a.bigbtn.alt{background:var(--btn2);color:var(--btn2-fg);border:2px solid var(--
 .lin-f{display:block}
 .lin-f + .lin-f{margin-top:.18em}
 .lin-b{flex:0 0 auto;font-size:.55em;color:var(--muted);white-space:nowrap}
+img.sheet{display:block;width:100%;height:auto;margin:.45em 0 .5em;
+  background:#fff;border-radius:.2em;padding:.15em}
 .lyric{white-space:pre-line}
 .big{font-size:1.15em;font-weight:700;line-height:1.35;margin:0 0 .5em}
 .sub{font-size:.7em;color:var(--muted);margin:0 0 .4em}
@@ -187,11 +189,15 @@ const LYRICS = {
     '거기서 우리 영원히\n주님의 은혜로\n해처럼 밝게 살면서\n주 찬양하리라 아멘',
   ],
 };
+/* img: sheets/ 폴더에 악보 이미지를 넣으면 화면에 바로 뜬다.
+   파일이 없으면 그 자리는 조용히 사라지고 아래 링크만 남는다. */
 const HYMNS = {
   587: { no:587, title:'감사하는 성도여', verses:'1절부터 4절까지',
+         img:'sheets/587.png',
          sheet:'https://www.hbible.co.kr/hb/hymn/view/587/',
          video:'https://www.youtube.com/watch?v=3LlYAZ2zO_M' },
   305: { no:305, title:'나 같은 죄인 살리신', verses:'1절부터 4절까지',
+         img:'sheets/305.png',
          sheet:'https://hymn.hanoon.app/ko/hymn/new/305/',
          video:'https://www.youtube.com/watch?v=_F8hQnWwHns' },
 };
@@ -263,6 +269,7 @@ function hymn(h){
   return `<div class="hymn-no">${h.no}장</div>
     <div class="hymn-title">${h.title}</div>
     <p class="hymn-v">${h.verses}</p>${ly}
+    ${h.img ? `<img class="sheet" src="${h.img}" alt="${h.no}장 악보" onerror="this.remove()">` : ''}
     <a class="bigbtn" target="_blank" rel="noopener" href="${h.sheet}">악보 · 가사 · 반주 듣기</a>
     <a class="bigbtn alt" target="_blank" rel="noopener" href="${h.video}">반주 영상 (유튜브)</a>`;
 }
